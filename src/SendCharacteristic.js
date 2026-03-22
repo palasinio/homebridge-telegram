@@ -8,10 +8,11 @@ module.exports = {
   registerWith: function (hap) {
 
     const Characteristic = hap.Characteristic;
+    const uuid = hap.uuid;
 
 
-    Characteristic.SendCharacteristic = function (api, displayName, notifications, bot) {
-      this.UUID = api.uuid.generate(displayName);
+    Characteristic.SendCharacteristic = function (botName, displayName, notifications, bot) {
+      this.UUID = uuid.generate(`${botName}:${displayName}`);
       Characteristic.call(this, displayName, this.UUID);
 
       const props = {
@@ -31,7 +32,7 @@ module.exports = {
       else {
         // New style configuration
         this._mode = notifications.mode;
-        this._randomize = notifications.hasOwnProperty('randomize') ? notifications.randomize : true;
+        this._randomize = Object.prototype.hasOwnProperty.call(notifications, 'randomize') ? notifications.randomize : true;
         this._notifications = notifications.messages;
       }
 
@@ -48,9 +49,26 @@ module.exports = {
 
       this._bot = bot;
 
-      this.on('set', this._onSet.bind(this));
+      if (typeof this.onSet === 'function') {
+        this.onSet(this._handleSet.bind(this));
+      }
+      else {
+        this.on('set', this._onSet.bind(this));
+      }
     };
     inherits(Characteristic.SendCharacteristic, Characteristic);
+
+    Characteristic.SendCharacteristic.prototype._handleSet = function (value) {
+      return new Promise((resolve, reject) => {
+        this._onSet(value, error => {
+          if (error) {
+            reject(error);
+            return;
+          }
+          resolve();
+        });
+      });
+    };
 
     Characteristic.SendCharacteristic.prototype._onSet = function (value, callback) {
 

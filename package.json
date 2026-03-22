@@ -1,11 +1,12 @@
 {
   "name": "homebridge-telegram",
-  "version": "0.2.0",
+  "version": "0.2.1",
+  "displayName": "Homebridge Telegram",
   "description": "Integrating telegram messenger with HomeKit",
   "main": "src/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/grover/homebridge-telegram.git"
+    "url": "git+https://github.com/palasinio/homebridge-telegram.git"
   },
   "keywords": [
     "homebridge",
@@ -16,24 +17,24 @@
   "author": "Michael Froehlich",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/grover/homebridge-telegram/issues"
+    "url": "https://github.com/palasinio/homebridge-telegram/issues"
   },
   "engines": {
-    "node": ">=9.3.0",
-    "homebridge": ">=0.4.36"
+    "node": "^20.18.0 || ^22.10.0 || ^24.0.0",
+    "homebridge": "^1.8.0 || ^2.0.0-beta.0"
   },
-  "homepage": "https://github.com/grover/homebridge-telegram",
+  "homepage": "https://github.com/palasinio/homebridge-telegram#readme",
   "dependencies": {
     "botfather": "^3.8.0",
-    "clone": "^2.1.1",
-    "debug": "^3.1.0"
+    "clone": "^2.1.2",
+    "debug": "^4.4.3"
   },
   "devDependencies": {
-    "eslint": "^4.18.0",
-    "npm-github-release": "^0.9.0"
+    "eslint": "^8.57.1",
+    "homebridge": "^2.0.0-beta.0"
   },
   "scripts": {
-    "lint": "./node_modules/.bin/eslint src",
-    "release": "npm-github-release"
+    "lint": "eslint src",
+    "test": "npm run lint"
   }
 }
