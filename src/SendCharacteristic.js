@@ -49,26 +49,9 @@ module.exports = {
 
       this._bot = bot;
 
-      if (typeof this.onSet === 'function') {
-        this.onSet(this._handleSet.bind(this));
-      }
-      else {
-        this.on('set', this._onSet.bind(this));
-      }
+      this.on('set', this._onSet.bind(this));
     };
     inherits(Characteristic.SendCharacteristic, Characteristic);
-
-    Characteristic.SendCharacteristic.prototype._handleSet = function (value) {
-      return new Promise((resolve, reject) => {
-        this._onSet(value, error => {
-          if (error) {
-            reject(error);
-            return;
-          }
-          resolve();
-        });
-      });
-    };
 
     Characteristic.SendCharacteristic.prototype._onSet = function (value, callback) {
 
