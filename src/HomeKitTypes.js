@@ -5,14 +5,16 @@ module.exports = {
 
     const Characteristic = hap.Characteristic;
     const Service = hap.Service;
+    const Formats = hap.Formats || Characteristic.Formats;
+    const Perms = hap.Perms || Characteristic.Perms;
 
     class TelegramBotQuiet extends Characteristic {
       constructor() {
         super('Quiet', TelegramBotQuiet.UUID);
 
         this.setProps({
-          format: Characteristic.Formats.BOOL,
-          perms: [Characteristic.Perms.READ, Characteristic.Perms.WRITE],
+          format: Formats.BOOL,
+          perms: [Perms.READ, Perms.WRITE],
         });
 
         this.value = this.getDefaultValue();

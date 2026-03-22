@@ -7,6 +7,8 @@ module.exports = {
   registerWith: function (hap) {
 
     const Characteristic = hap.Characteristic;
+    const Formats = hap.Formats || Characteristic.Formats;
+    const Perms = hap.Perms || Characteristic.Perms;
     const uuid = hap.uuid;
 
 
@@ -17,8 +19,8 @@ module.exports = {
         this.UUID = characteristicUuid;
 
         const props = {
-          format: Characteristic.Formats.BOOL,
-          perms: [Characteristic.Perms.READ, Characteristic.Perms.WRITE, Characteristic.Perms.NOTIFY],
+          format: Formats.BOOL,
+          perms: [Perms.READ, Perms.WRITE, Perms.NOTIFY],
         };
         this.setProps(props);
 
