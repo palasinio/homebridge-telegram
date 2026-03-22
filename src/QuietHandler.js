@@ -12,8 +12,10 @@ class QuietHandler {
 
   send(message, mode) {
     if (this._quiet === false) {
-      this._bot.send(message, mode);
+      return this._bot.send(message, mode);
     }
+
+    return Promise.resolve();
   }
 }
 
