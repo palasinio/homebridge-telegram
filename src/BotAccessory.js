@@ -3,19 +3,19 @@
 const Bot = require('./Bot');
 const QuietHandler = require('./QuietHandler');
 
-var Characteristic, Service;
+let Characteristic;
+let Service;
 
 
 class BotAccessory {
 
-  constructor(homebridge, log, config) {
-    Characteristic = homebridge.Characteristic;
-    Service = homebridge.Service;
+  constructor(hap, log, config) {
+    Characteristic = hap.Characteristic;
+    Service = hap.Service;
 
     this.log = log;
     this.name = config.name;
     this.version = config.version;
-    this.api = homebridge;
 
     this._notifications = config.notifications;
 
@@ -36,7 +36,6 @@ class BotAccessory {
   createServices() {
     return [
       this.getAccessoryInformationService(),
-      this.getBridgingStateService(),
       this.getBotService()
     ];
   }
@@ -51,27 +50,22 @@ class BotAccessory {
       .setCharacteristic(Characteristic.HardwareRevision, this.version);
   }
 
-  getBridgingStateService() {
-    this._bridgingStateService = new Service.BridgingState();
-    this._bridgingStateService
-      .setCharacteristic(Characteristic.Reachable, false)
-      .setCharacteristic(Characteristic.LinkQuality, 4)
-      .setCharacteristic(Characteristic.AccessoryIdentifier, this.name)
-      .setCharacteristic(Characteristic.Category, this.api.Accessory.Categories.OTHER);
-
-    return this._bridgingStateService;
-  }
-
   getBotService() {
     this._botService = new Service.TelegramBot(this.name);
+    this._botService.setCharacteristic(Characteristic.StatusActive, false);
 
-    this._botService.getCharacteristic(Characteristic.TelegramBotQuiet)
-      .on('set', this._setQuiet.bind(this))
-      .updateValue(false);
+    const quietCharacteristic = this._botService.getCharacteristic(Characteristic.TelegramBotQuiet);
+    if (typeof quietCharacteristic.onSet === 'function') {
+      quietCharacteristic.onSet(this._setQuiet.bind(this));
+    }
+    else {
+      quietCharacteristic.on('set', this._setQuiet.bind(this));
+    }
+    quietCharacteristic.updateValue(false);
 
 
     for (const name of Object.keys(this._notifications)) {
-      const c = new Characteristic.SendCharacteristic(this.api, name, this._notifications[name], this._quietHandler);
+      const c = new Characteristic.SendCharacteristic(this.name, name, this._notifications[name], this._quietHandler);
       this._botService.addCharacteristic(c);
     }
 
@@ -87,7 +81,9 @@ class BotAccessory {
     this.log('Setting bot quiet state to ' + quiet);
     this._quietHandler.setQuiet(quiet);
 
-    callback();
+    if (typeof callback === 'function') {
+      callback();
+    }
   }
 
   _onBotConnected() {
@@ -102,8 +98,8 @@ class BotAccessory {
   }
 
   _setReachable(reachable) {
-    this._bridgingStateService
-      .getCharacteristic(Characteristic.Reachable)
+    this._botService
+      .getCharacteristic(Characteristic.StatusActive)
       .updateValue(reachable);
   }
 }

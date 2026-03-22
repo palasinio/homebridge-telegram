@@ -29,6 +29,7 @@ module.exports = {
 
       // Optional Characteristics
       this.addOptionalCharacteristic(Characteristic.Name);
+      this.addOptionalCharacteristic(Characteristic.StatusActive);
     };
     inherits(Service.TelegramBot, Service);
     Service.TelegramBot.UUID = 'CA1172BF-8FB8-4F26-98E9-71EE92F7AF63';
