@@ -1,8 +1,8 @@
 {
   "name": "homebridge-telegram",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "displayName": "Homebridge Telegram",
-  "description": "Integrating telegram messenger with HomeKit",
+  "description": "Send Telegram messages from HomeKit switches via Homebridge",
   "main": "src/index.js",
   "repository": {
     "type": "git",
@@ -12,7 +12,9 @@
     "homebridge",
     "homebridge-plugin",
     "telegram",
-    "notifications"
+    "notifications",
+    "homekit",
+    "switch"
   ],
   "author": "Michael Froehlich",
   "license": "MIT",
@@ -26,12 +28,11 @@
   "homepage": "https://github.com/palasinio/homebridge-telegram#readme",
   "dependencies": {
     "botfather": "^3.8.0",
-    "clone": "^2.1.2",
     "debug": "^4.4.3"
   },
   "devDependencies": {
     "eslint": "^8.57.1",
-    "homebridge": "^2.0.0-beta.0"
+    "homebridge": "^1.11.3"
   },
   "scripts": {
     "lint": "eslint src",

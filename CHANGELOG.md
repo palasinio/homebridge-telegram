@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.3.0
+
+- Added compatibility with modern Homebridge 1 and Homebridge 2 builds.
+- Added support for Node.js 20, 22, and 24.
+- Replaced the custom Telegram service UI with standard HomeKit switch services.
+- Each notification group is now exposed as its own switch and can be triggered directly from the Home app.
+- Added a dedicated `Quiet` switch to mute Telegram sends without removing the accessory.
+- Fixed Homebridge 1 sending regressions introduced during the compatibility update.
+- Removed Telegram update polling during startup to avoid reconnect and error-message loops.
+- Refreshed package metadata, development tooling, and documentation.
+
 ## 0.1.0
 
 ### Urgencies now replaced with switches for individual notification groups
