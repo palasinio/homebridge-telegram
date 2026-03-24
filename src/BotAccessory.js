@@ -58,9 +58,8 @@ class BotAccessory {
   getQuietService() {
     this._quietService = new Service.Switch(`${this.name} Quiet`, 'quiet');
     this._quietService.addOptionalCharacteristic(Characteristic.StatusActive);
-    this._quietService
-      .setCharacteristic(Characteristic.Name, 'Quiet')
-      .setCharacteristic(Characteristic.StatusActive, false);
+    this._setServiceLabel(this._quietService, 'Quiet');
+    this._quietService.setCharacteristic(Characteristic.StatusActive, false);
 
     const quietCharacteristic = this._quietService.getCharacteristic(Characteristic.On);
     if (typeof quietCharacteristic.onSet === 'function') {
@@ -79,9 +78,8 @@ class BotAccessory {
   getNotificationService(notificationName) {
     const service = new Service.Switch(notificationName, `notification-${notificationName}`);
     service.addOptionalCharacteristic(Characteristic.StatusActive);
-    service
-      .setCharacteristic(Characteristic.Name, notificationName)
-      .setCharacteristic(Characteristic.StatusActive, false);
+    this._setServiceLabel(service, notificationName);
+    service.setCharacteristic(Characteristic.StatusActive, false);
 
     this._notificationStates[notificationName] = this._createNotificationState(this._notifications[notificationName]);
 
@@ -129,6 +127,15 @@ class BotAccessory {
       service
         .getCharacteristic(Characteristic.StatusActive)
         .updateValue(reachable);
+    }
+  }
+
+  _setServiceLabel(service, name) {
+    service.setCharacteristic(Characteristic.Name, name);
+
+    if (Characteristic.ConfiguredName) {
+      service.addOptionalCharacteristic(Characteristic.ConfiguredName);
+      service.setCharacteristic(Characteristic.ConfiguredName, name);
     }
   }
 
