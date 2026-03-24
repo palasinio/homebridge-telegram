@@ -25,45 +25,12 @@ class Bot extends EventEmitter {
     this._call('getMe')
       .then(bot => {
         debug('[%s] I am @%s, right? :)', this.name, bot.username);
-        this._getBotUpdates();
       })
       .then(() => {
         this._setStatus('connected');
       })
       .catch(e => {
         debug('[%s] Failed to retrieve bot data from telegram. %o', this.name, e);
-      });
-  }
-
-  _getBotUpdates() {
-    const parameters = {
-      limit: 100,
-      timeout: 60 * 2
-    };
-
-    if (this._updateOffset) {
-      parameters.offset = this._updateOffset;
-    }
-
-    this._call('getUpdates', parameters)
-      .then(updates => {
-        for (let update of updates) {
-          debug('[%s] Telegram message %o', this.name, update);
-          if (update.message.chat) {
-            debug('[%s] Are you trying to invite me to a chat? Chat: %o', this.name, update.message.chat);
-          }
-        }
-
-        // offset = update_id of last processed update + 1 
-        if (updates.length > 0) {
-          const identifiers = updates.map((update) => update.update_id);
-          this._updateOffset = Math.max.apply(Math, identifiers) + 1;
-        }
-
-        this._getBotUpdates();
-      })
-      .catch(e => {
-        debug('[%s] Failed to retrieve bot updates from telegram. %o', this.name, e);
       });
   }
 
